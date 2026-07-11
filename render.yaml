@@ -16,10 +16,14 @@ services:
       - key: TAVUS_REPLICA_ID
         value: rc2146c13e81 # Olivia
       - key: USE_CLAUDE
-        value: "false" # flip to true after adding Anthropic + this service's URL
+        value: "true"
+      - key: PUBLIC_URL
+        value: https://chelsey.onrender.com
+      - key: PROXY_SECRET
+        generateValue: true # random shared secret so only Tavus can reach the Claude proxy
       - key: ELEVENLABS_API_KEY
         sync: false
       - key: ELEVENLABS_VOICE_ID
         sync: false
       - key: ANTHROPIC_API_KEY
-        sync: false
+        sync: false # set the value in the Render dashboard (secret, not committed)

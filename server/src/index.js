@@ -51,7 +51,7 @@ async function ensurePersona() {
     ? {
         model: env('CLAUDE_MODEL') || 'claude-opus-4-8',
         base_url: `${env('PUBLIC_URL').replace(/\/$/, '')}/v1`,
-        api_key: 'chelsey-proxy', // our proxy ignores this; Tavus requires a value
+        api_key: env('PROXY_SECRET') || 'chelsey-proxy', // shared secret; the proxy checks it
         speculative_inference: true,
       }
     : undefined;

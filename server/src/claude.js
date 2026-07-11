@@ -41,6 +41,12 @@ function openAIChunk(id, delta, finish = null) {
 
 // Express handler for POST /v1/chat/completions (streaming + non-streaming).
 export async function chatCompletions(req, res) {
+  // Only Tavus (which sends our shared secret as a Bearer token) may use this
+  // public endpoint — otherwise anyone could burn Anthropic tokens.
+  const secret = process.env.PROXY_SECRET;
+  if (secret && req.headers.authorization !== `Bearer ${secret}`) {
+    return res.status(401).json({ error: { message: 'unauthorized' } });
+  }
   if (!process.env.ANTHROPIC_API_KEY) {
     return res.status(503).json({ error: { message: 'ANTHROPIC_API_KEY not set' } });
   }
