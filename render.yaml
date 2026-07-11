@@ -14,7 +14,7 @@ services:
       - key: TAVUS_API_KEY
         sync: false # set this in the dashboard
       - key: TAVUS_REPLICA_ID
-        value: r38e4c3bc562 # Samantha (young, blonde, fitted look)
+        value: r9d30b0e55ac # Luna (young, brunette, long hair)
       - key: USE_CLAUDE
         value: "true"
       - key: CLAUDE_MODEL
