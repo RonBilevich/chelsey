@@ -4,7 +4,7 @@ import cors from 'cors';
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
-import { loadSystemPrompt, CHELSEY_GREETING } from './persona.js';
+import { loadSystemPrompt, pickGreeting } from './persona.js';
 import { createPersona, createConversation, endConversation } from './tavus.js';
 import { chatCompletions } from './claude.js';
 
@@ -106,7 +106,7 @@ app.post('/api/conversation', async (_req, res) => {
       apiKey: env('TAVUS_API_KEY'),
       replicaId: env('TAVUS_REPLICA_ID'),
       personaId,
-      greeting: CHELSEY_GREETING,
+      greeting: pickGreeting(),
     });
     res.json(convo);
   } catch (err) {

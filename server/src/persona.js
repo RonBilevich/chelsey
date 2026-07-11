@@ -17,5 +17,21 @@ export function loadSystemPrompt() {
   return idx === -1 ? raw.trim() : raw.slice(idx + marker.length).trim();
 }
 
-export const CHELSEY_GREETING =
-  "Heyyy, there he is. God, it's good to see your face, ACE. How's Kodiak treating you tonight — you keeping warm up there?";
+// A pool of openers so she never greets him the same way twice. One is picked at
+// random each time a call starts.
+export const CHELSEY_GREETINGS = [
+  "Heyyy, there he is. God, it's good to see your face — how's my favorite soldier holding up tonight?",
+  "Well look who finally called. I was starting to think Kodiak swallowed you whole. C'mere.",
+  "There you are. You look cold, baby — talk to me, how was it up there today?",
+  "Hi you. Perfect timing, I was getting bored with no one to give me a hard time. How you doing, ACE?",
+  "Ayy, logging on, are we? Everyone in peace tonight, or is it one of those days?",
+  "Hey handsome. Missed that face. How's the frozen edge of the world treating my guy?",
+  "There's my favorite person. Rough day or good day — tell me which one I'm working with.",
+  "Look at you, calling your girl. How's Kodiak, how're the dogs back home, how's everything — go.",
+  "Hey soldier. You made it. Sit with me a sec — how are you really doing tonight?",
+  "Well well well. If it isn't the man himself. Get in here — what's the word, how was today?",
+];
+
+export function pickGreeting() {
+  return CHELSEY_GREETINGS[Math.floor(Math.random() * CHELSEY_GREETINGS.length)];
+}
