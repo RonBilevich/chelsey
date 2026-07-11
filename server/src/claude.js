@@ -54,13 +54,12 @@ function openAIChunk(id, delta, finish = null) {
 }
 
 // Plain (non-streaming) generation — used by /api/selftest and non-stream calls.
-export async function runClaude({ system, messages, maxTokens = 200, temperature = 0.9 }) {
+export async function runClaude({ system, messages, maxTokens = 200 }) {
   const msg = await anthropic().messages.create({
     model: MODEL,
     system,
     messages,
     max_tokens: maxTokens,
-    temperature,
   });
   return msg.content.map((b) => (b.type === 'text' ? b.text : '')).join('');
 }
@@ -78,7 +77,7 @@ export async function chatCompletions(req, res) {
     return res.status(503).json({ error: { message: 'ANTHROPIC_API_KEY not set' } });
   }
 
-  const { messages, stream = true, temperature = 0.9, max_tokens = 250 } = req.body || {};
+  const { messages, stream = true, max_tokens = 250 } = req.body || {};
   const { system, turns } = toAnthropic(messages);
   console.log(`[proxy] chat: msgs=${(messages || []).length} turns=${turns.length} stream=${stream}`);
 
@@ -86,7 +85,7 @@ export async function chatCompletions(req, res) {
 
   try {
     if (!stream) {
-      const text = await runClaude({ system, messages: turns, maxTokens: max_tokens, temperature });
+      const text = await runClaude({ system, messages: turns, maxTokens: max_tokens });
       console.log(`[proxy] ok (non-stream), ${text.length} chars`);
       return res.json({
         id,
@@ -111,7 +110,6 @@ export async function chatCompletions(req, res) {
       system,
       messages: turns,
       max_tokens,
-      temperature,
       stream: true,
     });
 
