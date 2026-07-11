@@ -53,11 +53,18 @@ function openAIChunk(id, delta, finish = null) {
   };
 }
 
+// Wrap the (long, unchanging) system prompt in a cached block so we're not billed
+// full price for it on every single turn of a live conversation (~90% cheaper).
+function systemParam(system) {
+  if (!system) return undefined;
+  return [{ type: 'text', text: system, cache_control: { type: 'ephemeral' } }];
+}
+
 // Plain (non-streaming) generation — used by /api/selftest and non-stream calls.
 export async function runClaude({ system, messages, maxTokens = 200 }) {
   const msg = await anthropic().messages.create({
     model: MODEL,
-    system,
+    system: systemParam(system),
     messages,
     max_tokens: maxTokens,
   });
@@ -107,7 +114,7 @@ export async function chatCompletions(req, res) {
     let chars = 0;
     const anthropicStream = await anthropic().messages.create({
       model: MODEL,
-      system,
+      system: systemParam(system),
       messages: turns,
       max_tokens,
       stream: true,

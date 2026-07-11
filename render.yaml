@@ -17,6 +17,8 @@ services:
         value: rc2146c13e81 # Olivia
       - key: USE_CLAUDE
         value: "true"
+      - key: CLAUDE_MODEL
+        value: claude-sonnet-5
       - key: PUBLIC_URL
         value: https://chelsey.onrender.com
       - key: PROXY_SECRET
