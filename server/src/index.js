@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url';
 
 import { loadSystemPrompt, pickGreeting } from './persona.js';
 import { createPersona, createConversation, endConversation } from './tavus.js';
-import { chatCompletions } from './claude.js';
+import { chatCompletions, runClaude } from './claude.js';
 
 const PORT = process.env.PORT || 8787;
 const personaCachePath = fileURLToPath(new URL('../.persona-id', import.meta.url));
@@ -126,6 +126,29 @@ app.post('/api/conversation/:id/end', async (req, res) => {
 
 // OpenAI-compatible endpoint Tavus calls for Chelsey's replies (backed by Claude).
 app.post('/v1/chat/completions', chatCompletions);
+
+// Diagnostic: verifies Claude works in this deployed environment.
+app.get('/api/selftest', async (_req, res) => {
+  const out = {
+    anthropicKeySet: !!env('ANTHROPIC_API_KEY'),
+    useClaude,
+    publicUrl: env('PUBLIC_URL'),
+    proxySecretSet: !!env('PROXY_SECRET'),
+    model: env('CLAUDE_MODEL') || 'claude-opus-4-8',
+  };
+  try {
+    out.claudeReply = await runClaude({
+      system: 'Reply with exactly: OK',
+      messages: [{ role: 'user', content: 'test' }],
+      maxTokens: 10,
+    });
+    out.ok = true;
+  } catch (e) {
+    out.ok = false;
+    out.error = e.message;
+  }
+  res.json(out);
+});
 
 // Serve the built web app so the whole thing is ONE service at ONE URL — that's
 // what makes a single shareable link (or a public tunnel) work with no CORS.
