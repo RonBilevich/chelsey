@@ -1,0 +1,25 @@
+# Render deployment (https://render.com) — one free web service that builds the
+# web app and runs the server (single origin, one clean URL, 24/7).
+# Secrets (TAVUS_API_KEY etc.) are set in the Render dashboard, NOT committed.
+services:
+  - type: web
+    name: chelsey
+    runtime: node
+    plan: free
+    buildCommand: cd web && npm install && npm run build && cd ../server && npm install
+    startCommand: cd server && node src/index.js
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+      - key: TAVUS_API_KEY
+        sync: false # set this in the dashboard
+      - key: TAVUS_REPLICA_ID
+        value: rc2146c13e81 # Olivia
+      - key: USE_CLAUDE
+        value: "false" # flip to true after adding Anthropic + this service's URL
+      - key: ELEVENLABS_API_KEY
+        sync: false
+      - key: ELEVENLABS_VOICE_ID
+        sync: false
+      - key: ANTHROPIC_API_KEY
+        sync: false

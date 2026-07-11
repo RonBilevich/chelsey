@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.env
+.env.local
+server/.env
+server/.persona-id
+*.log
+.DS_Store
+cloudflared.exe
+*.exe
